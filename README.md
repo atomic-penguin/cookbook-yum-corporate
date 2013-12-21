@@ -1,4 +1,4 @@
-[yum-corporate Cookbook
+yum-corporate Cookbook
 ======================
 
 [![Build Status](https://secure.travis-ci.org/atomic-penguin/cookbook-yum-corporate.png?branch=master)](http://travis-ci.org/atomic-penguin/cookbook-yum-corporate)
