@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: yumrepo
-# Recipe:: default 
+# Cookbook Name:: yum-corporate
+# Recipe:: default
 #
-# Copyright 2010, Eric G. Wolfe
+# Copyright 2011, Eric G. Wolfe
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@
 # limitations under the License.
 #
 
-include_recipe "yum::yum"
-include_recipe "yum::epel"
-include_recipe "yumrepo::dell"
-include_recipe "yumrepo::vmware-tools"
+yum_repository node['yum']['corporate']['name'] do
+  description "#{node['yum']['corporate']['name']} Yum Repo"
+  gpgkey node['yum']['corporate']['gpgkey']
+  gpgcheck node['yum']['corporate']['gpgcheck']
+  baseurl node['yum']['corporate']['baseurl']
+  action :create
+end

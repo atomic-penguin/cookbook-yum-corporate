@@ -1,10 +1,27 @@
-## yumrepo
+yum-corporate Cookbook CHANGELOG
+======================
+This file is used to list changes made in each version of the yum-corporate cookbook.
 
-### v2.1.0
+v3.0.0
+------
+
+Reworked against [yum](http://github.com/opscode-cookbooks/yum) 3.0.0
+
+* Split corporate recipe out from soon to be deprecated, yumrepo
+  - Changed variable scope from `yumrepo['corp']` to `yum['corporate']`
+  - Updated kitchen files
+  - Added ChefSpec unit tests
+  - Removed minitest unit tests
+  - Added contrived integration tests
+  - Added Rubocop style guide linter
+
+v2.1.0
+------
 
 * Pin against yum < 3.0.0
 
-### v2.0.0
+v2.0.0
+------
 
 * Add test-kitchen skeleton
   - Validated recipes against yum v2.3.0
@@ -12,7 +29,8 @@
 * Deprecated annvix repo
   - Appears to be no longer maintained for EL6
 
-### v1.0.0
+v1.0.0
+------
 
 * vmware-tools
   - Bump version to ESX 5.1
@@ -24,7 +42,8 @@
 * disable minitest spec for Travis
   - This isn't working on TravisCI, will revisit unit tests later
 
-### v0.16.6
+v0.16.6
+-------
 
 * add zeromq repo
   - contributed by @BryanWB
@@ -34,33 +53,38 @@
   
 TODO - Replace tests with chefspec
 
-### v0.16.5
+v0.16.5
+-------
 
 Fix mirrorlist attribute in Dell recipe.
 
-### v0.16.4
+v0.16.4
+-------
 
 Thanks to Paul Graydon (@twirrim) for adding Percona MySQL repositories.
 
 Thanks to Bryan Berry (@bryanwb) for adding yet another PostgreSQL
 repository. :)
 
-#### Breaking changes (postgresql)
+Breaking changes (postgresql)
 
 * Recipe renamed, postgresql9 -> postgresql.
 * Added node['repo']['postgresql']['version'] to select version of
   Postgres via attribute, from pgrpms.org repository.
 
-### v0.16.3
+v0.16.3
+-------
 
 Set name/base_url to localdomain in the case Ohai `domain` is
 unavailable.  Fixes chef-solo compilation error on Vagrant boxes.
 
-### v0.16.2
+v0.16.2
+-------
 
     Change corporate recipe to key off domain name.
 
-### v0.16.0
+v0.16.0
+-------
 
     Add VMWare Tools for ESX v5.0u1, along with a vmware-tools-upgrade
 recipe.  The yumrepo::vmware-tools recipe is backwards incompatible.

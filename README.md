@@ -1,133 +1,114 @@
-# Yumrepo [![Build Status](https://secure.travis-ci.org/atomic-penguin/cookbook-yumrepo.png?branch=master)](http://travis-ci.org/atomic-penguin/cookbook-yumrepo)
+[yum-corporate Cookbook
+======================
 
-## Description
+[![Build Status](https://secure.travis-ci.org/atomic-penguin/cookbook-yum-corporate.png?branch=master)](http://travis-ci.org/atomic-penguin/cookbook-yum-corporate)
 
-Manages Yum Repository files in /etc/yum.repos.d on CentOS / RHEL 5.x.
+Configures repo file, via attributes, for internal corporate yum mirror.
 
-Yum repositories included in this recipe:
-EPEL, ELFF, Dell OMSA, Dell Community, Dell Firmware, VMware Tools, and more...
+This is a simple cookbook, where you may set a few attributes to point
+servers at a local yum mirror.  Much of the credit goes to @BryanWB
+for the idea, and a good portion of the original implementation in
+the soon to be deprecated yumrepo cookbook.
 
-## Requirements
+Requirements
+------------
 
-This cookbook requires RHEL or CentOS 5.x, and newer.
-It has not been tested on other platforms.  It probably will
-not work with RHEL 4 or CentOS 4, especially if you have not
-taken action to manually install yum on that platform.
+This cookbook depends on the `yum_repository` provider from the `yum` cookbook.
+You need to have a RHEL family platform, and yum, to use the cookbook.
 
-## Notes
+#### cookbooks 
+
+- `yum` - Opscode maintained v3.0.x cookbook
+
+Attributes
+----------
+The following are overridable attributes, in the `yum['corporate']` namespace.
+
+#### yum-corporate::default
+
+<table>
+  <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Default</th>
+  </tr>
+  <tr>
+    <td><tt>['yum']['corporate']['name']</tt></td>
+    <td>String</td>
+    <td>Short name for the repo.  The first part of the domain attribute will be used, if not set.
+        given example.com, value would be:</td>
+    <td><tt>example</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['yum']['corporate']['baseurl']</tt></td>
+    <td>String</td>
+    <td>URL where repodata folder is located.  Your domain, platform_family, and major platform_version will be used as a guess, if not set.
+        Given domain example.com; platform_family rhel; and platform_version 6.4 the default would be:</td>
+    <td><tt>http://yum.example.com/yum/rhel/6/$basearch</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['yum']['corporate']['gpgkey']</tt></td>
+    <td>String</td>
+    <td>URL where GPG key is located.  The repository provider in yum should authorize the key by setting this attribute.</td>
+    <td><tt>nil (off)</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['yum']['corporate']['gpgcheck']</tt></td>
+    <td>true/false</td>
+    <td>Whether, or not, to validate signed packages from this repository against the GPG key specified.
+        Default value depends on whether gpgkey has been set, or not.</td>
+    <td><tt>false, if ['yum']['corporate']['gpgkey'] not set.
+            true, if ['yum']['corporate']['gpgkey'] is set.</tt></td>
+  </tr>
+</table>
+
+Usage
 -----
+#### yum-corporate::default
 
-RHEL 6 support is fairly well tested in the dell, vmware-tools, and
-epel recipes.  Let me know if you find a platform 6 bug, related to
-any one of the recipes.
+Optionally, set attributes in a role, and
+include `yum-corporate` in your node's `run_list`:
 
-The yumrepo::dell recipe requires Dell manufactured hardware.  This
-recipe should automatically disable itself if non-Dell hardware is
-detected by Ohai
+```
+default_attributes(
+  :yum => {
+    :corporate => {
+      :gpgkey => {
+        "http://yum.example.com/yum/RPM-GPG-KEY-example" 
+      }
+    }
+  }
+)
+```
 
-A **major breaking change in this cookbook is the introduction of an
-upgrade recipe** for vmware-tools.  Since VMWare does not support
-upgrades on their packaged vmware-tools, I created a
-vmware-tools-upgrade recipe to migrate from vmware-tools 4.1 to 5.x.  
-You should ensure the yumrepo recipes are not in a base role, until
-all your nodes have been migrated to 5.x.
+```json
+{
+  "name":"my_node",
+  "run_list": [
+    "recipe[yum-corporate]"
+  ]
+}
+```
 
-## Individual Recipe Usage:
+Contributing
+------------
 
-### yumrepo::default
+1. Fork the repository on Github
+2. Create a named feature branch (like `add_component_x`)
+3. Write your change
+4. Write tests for your change (if applicable)
+5. Run the tests, ensuring they all pass
+6. Submit a Pull Request using Github
 
-Includes recipes:
-
-* yum::yum
-* yum::epel
-* yumrepo::dell
-
-### yum::epel
-
-- Provides RPM keys and repo file for
-   Fedora EPEL (Extra Packages for Enterprise Linux)
-  * See http://fedoraproject.org/wiki/EPEL for more info
-
-### yumrepo::dell
-
-- Provides repo files for the following Dell repositories.
-  - hardware / Open Manage Server Administrator
-  - community / formerly the software repository
-  - firmware / Convenient but unsupported by Dell
-  * See http://linux.dell.com for more info
-
-- repo['dell]['download_firmware'] = true||false
-  * disables/enables community/firmware repositories in dell recipe
-  * OMSA (hardware) repository will detect Dell hardware platform and
-    enable itself, dynamically. It is not affected by this attribute.
-
-### yumrepo::rbel
-
-- Provides repo files for rbel.frameos.org
-  * Ruby and Opscode Chef packages for RHEL distros 
-
-### yumrepo::vmware-tools-upgrade
-
-- Removes vmware-tools for ESX 4.1 installed with this cookbook.
-  Then includes the yumrepo::vmware-tools recipe to re-install
-  VMWare Tools compatiblie with ESX 5.1.  *This must be in
-  your run list before the yumrepo::vmware-tools recipe* to
-  successfully upgrade the tools with the recipe.
-
-### yumrepo::vmware-tools
-
-- Uninstalls VMwareTools rpm installed from the
-   VMware "Install/Upgrade VMware Tools" menu
-- Uninstalls manually installed vmware-tools
-   packages, the recipe needs to first run
-   vmware-uninstall-tools.pl to use the RPM packages
-   from the repo.
-- Provides RPM keys and repo file for
-   VMware Tools for ESX
-  * See http://packages.vmware.com for more info
-
-- repo['vmware']['release'] (ESX version number, default 5.1)
-  * This is used to determine the correct URL in the
-    VMware RHEL5/CentOS repository.
-
-### yumrepo::percona
-
-- Percona MySQL repositories
-  * http://repo.percona.com/centos/
-
-### yumrepo::postgresql
-
-- PostgreSQL RPMs
-  * See http://pgrpms.org for more information.
-
-- repo['postgresql']['version']
-  * Select version of Postgres to install via attribute.
-
-### yumrepo::zenoss
-
-- ZenOss Network Monitoring System
-  * See http://zenoss.org for more information
-
-### yumrepo::zeromq
-
-- [ZeroMQ](http://www.zeromq.org/distro:centos)
-  * This repository hosts the latest stable builds for zeromq
-
-### yumrepo::corporate
-
-- Generic example recipe to be used with an internal Yum mirror, or
-  repository.
-  * By default this recipe uses the basename of your domain as the
-    repository name.
-
-### yumrepo::jenkins
-
-- Jenkins CI yum repository
-
-## License and Author
+License and Authors
+-------------------
 
 Author:: Eric G. Wolfe
 Copyright:: 2010-2011
+
+Contributor:: Bryan W. Berry
+Copyright:: 2012
 
 Author:: Tippr, Inc.
 Copyright:: 2010
