@@ -91,6 +91,11 @@ default_attributes(
 }
 ```
 
+#### yum-corporate::undo
+
+Removes repository file based on `['yum']['corporate']['name']`.
+This recipe does the opposite action of yum-corporate::default.
+
 Contributing
 ------------
 

@@ -2,6 +2,11 @@ yum-corporate Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the yum-corporate cookbook.
 
+v3.0.1
+------
+
+Added undo recipe to remove `['yum']['corporate']['name']` 
+
 v3.0.0
 ------
 
