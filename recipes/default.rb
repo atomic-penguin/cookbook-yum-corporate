@@ -18,7 +18,7 @@
 #
 
 yum_repository node['yum']['corporate']['name'] do
-  description "#{node['yum']['corporate']['name']} Yum Repo"
+  description node['yum']['corporate']['description']
   gpgkey node['yum']['corporate']['gpgkey']
   gpgcheck node['yum']['corporate']['gpgcheck']
   baseurl node['yum']['corporate']['baseurl']
