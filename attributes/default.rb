@@ -20,6 +20,9 @@
 # Use the first part of the node.domain attribute as repo name (i.e. example from example.com)
 default['yum']['corporate']['name'] = node['domain'] ?  node['domain'].split('.')[0] : 'localdomain'
 
+# Use the same node domain name and a default repo title
+default['yum']['corporate']['description'] = node['domain'] ?  node['domain'].split('.')[0] + ' Yum repo' : 'localdomain'
+
 # Set the corporate URL, e.g. http://yum.example.com/yum/rhel/6/$basearch
 default['yum']['corporate']['baseurl'] = "http://yum.#{node['domain']}/yum/#{node['platform_family']}/#{node['platform_version'].to_i}/$basearch"
 
