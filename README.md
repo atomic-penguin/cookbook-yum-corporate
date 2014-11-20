@@ -41,6 +41,13 @@ The following are overridable attributes, in the `yum['corporate']` namespace.
     <td><tt>example</tt></td>
   </tr>
   <tr>
+    <td><tt>['yum']['corporate']['description']</tt></td>
+    <td>String</td>
+    <td>Short description.  The first part of the domain attribute will be used followed by the string ' Yum repo', if not set.
+        given example.com, value would be:</td>
+    <td><tt>example.com yum mirror</tt></td>
+  </tr>
+  <tr>
     <td><tt>['yum']['corporate']['baseurl']</tt></td>
     <td>String</td>
     <td>URL where repodata folder is located.  Your domain, platform_family, and major platform_version will be used as a guess, if not set.
