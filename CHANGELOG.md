@@ -2,6 +2,11 @@ yum-corporate Cookbook CHANGELOG
 ======================
 This file is used to list changes made in each version of the yum-corporate cookbook.
 
+v3.0.2
+------
+
+Added variable for yum repo description `['yum']['corporate']['description']` 
+
 v3.0.1
 ------
 
